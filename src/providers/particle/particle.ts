@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
-import { Rx } from 'rx/Rx';
+import 'rxjs/Rx';
+import 'rxjs/add/observable/interval';
+import 'rxjs/add/observable/fromEvent';
 
 /*
   Generated class for the ParticleProvider provider.
@@ -127,8 +129,8 @@ export class ParticleProvider {
   }
 
   pollVariable(variable: string, interval: number = 2000, deviceId: string = this.deviceId) {
-    var source = Rx.Observable.interval(interval).flatMap( (i) => {
-        return Rx.Observable.fromPromise(this.getVariable(variable, deviceId));
+    var source = Observable.interval(interval).flatMap( (i) => {
+        return Observable.fromPromise(this.getVariable(variable, deviceId));
     });
     return source;
   }
