@@ -108,10 +108,14 @@ export class ParticleProvider {
     var promise = new Promise( (resolve, reject) => {
         this.api.listDevices({ auth: this.token }).then(
             (data) => {
-                for (var key in data) {
-                    this.getDevice(data.body[key].id);
+                if (body["statusCode"] != 200) {
+                    reject(body);
+                } else {
+                    for (var key in data) {
+                        this.getDevice(data.body[key].id);
+                    }
+                    resolve(this.devices);
                 }
-                resolve(data);
             },
             (error) => {
                 reject(error);
