@@ -58,7 +58,7 @@ export class ParticleProvider {
   getEventSubscription(name: string = "mine", deviceId: string = this.deviceId) {
     var observable = Observable.create(
         (observer) => {
-            this.getEventStream(name, deviceId).then( 
+            this.getEventStream(name, deviceId).then(
                 (stream) => {
                     console.log("event stream", stream);
                     stream.on('event', (result) => {
@@ -86,7 +86,7 @@ export class ParticleProvider {
         (resolve, reject) => {
             this.api.login( { username: email, password: password } ).then(
                 (data) => {
-                    this.token = data.body.access_token;                    
+                    this.token = data.body.access_token;
                     resolve(data);
                 },
                 (error) => {
@@ -108,7 +108,7 @@ export class ParticleProvider {
     var promise = new Promise( (resolve, reject) => {
         this.api.listDevices({ auth: this.token }).then(
             (data) => {
-                for (var key in data) {
+                for (var key in data.body) {
                     this.getDevice(data.body[key].id);
                 }
                 resolve(data);
