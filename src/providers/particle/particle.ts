@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/Rx';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/observable/fromEvent';
+import { Observable } from 'rxjs/Rx';
 
 /*
   Generated class for the ParticleProvider provider.
