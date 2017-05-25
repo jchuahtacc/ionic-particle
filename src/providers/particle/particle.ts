@@ -20,8 +20,7 @@ export class ParticleProvider {
     this.api = new Particle();
   }
 
-  setToken(token: string) {
-
+  setToken(token: string) {``
     return new Promise((resolve, reject) => {
         this.api.getUserInfo({ auth: token }).then(
             (data) => {
