@@ -11,6 +11,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ParticleProvider } from '../providers/particle/particle';
 
+import { AppPreferences } from '@ionic-native/app-preferences';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -33,7 +35,8 @@ import { ParticleProvider } from '../providers/particle/particle';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ParticleProvider
+    ParticleProvider,
+    AppPreferences,
   ]
 })
 export class AppModule {}

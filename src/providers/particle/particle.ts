@@ -137,7 +137,6 @@ export class ParticleProvider {
                 if (data["statusCode"] != 200) {
                     reject(data);
                 } else {
-
                     this.devices = data.body;
                     resolve(this.devices);
                 }

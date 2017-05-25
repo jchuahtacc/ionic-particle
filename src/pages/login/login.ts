@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { ParticleProvider } from '../../providers/particle/particle';
+import { AppPreferences } from '@ionic-native/app-preferences';
 
 /**
  * Generated class for the LoginPage page.
@@ -17,13 +18,49 @@ export class LoginPage {
   email: string;
   password: string;
   loginFailed: boolean = false;
+  loading: boolean = true;
+  @ViewChild('setupSlides') setupSlides: Slides;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider) {
-    console.log(this.particle);
+  constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider, private prefs: AppPreferences) {
+    console.log("LoginPage constructor");
+  }
+
+  ngAfterViewInit() {
+    this.setupSlides.lockSwipeToNext(true);
+  }
+
+  slideChanged() {
+      switch (this.setupSlides.getActiveIndex()) {
+        case 0 : this.doWelcomeSlide(); break;
+        case 2 : this.doDeviceSlide(); break;
+        default : break;
+      }
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    this.doWelcomeSlide();
+  }
+
+  doWelcomeSlide() {
+    console.log("doWelcomeSlide");
+    let errorCallback = (error) => { this.particle.logout(); this.loading = false; };
+    this.prefs.fetch("token").then(
+        (token) => {
+            this.particle.setToken(token).then(
+                (userInfo) => {
+                    this.loading = false;
+                },
+                (error) => {
+                    this.particle.logout();
+                    this.loading = false;
+                }
+            );
+        },
+        errorCallback
+    );
+  }
+
+  doDeviceSlide() {
   }
 
   test() {

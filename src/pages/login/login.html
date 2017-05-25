@@ -12,23 +12,35 @@
 
 </ion-header>
 
-
 <ion-content padding>
-    <div>
-        Please log in to your Particle.io account.
-    </div>
-    <ion-list>
-        <ion-item>
-            <ion-label fixed>E-mail</ion-label>
-            <ion-input type="email" value="" [(ngModel)]="email"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label fixed>Password</ion-label>
-            <ion-input type="password" value="" [(ngModel)]="password"></ion-input>
-        </ion-item>
-    </ion-list>
-    <button ion-button (click)="doLogin()">Login</button>
-    <div ng-show="loginFailed">
-        Your login information was incorrect.
-    </div>
+    <ion-slides #setupSlides (ionSlideDidChange)="slideChanged()">
+        <ion-slide #welcomeSlide *ngIf="loading">
+            <div>Welcome!</div>
+            <div>Loading your preferences</div>
+            <ion-spinner></ion-spinner>
+        </ion-slide>
+        <ion-slide #loginSlide *ngIf="!particle.token">
+            <div>
+                Please log in to your Particle.io account.
+            </div>
+            <ion-list>
+                <ion-item>
+                    <ion-label fixed>E-mail</ion-label>
+                    <ion-input type="email" value="" [(ngModel)]="email"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label fixed>Password</ion-label>
+                    <ion-input type="password" value="" [(ngModel)]="password"></ion-input>
+                </ion-item>
+            </ion-list>
+            <button ion-button (click)="doLogin()">Login</button>
+            <div *ngIf="loginFailed">
+                Your login information was incorrect. {{loginFailed}}
+            </div>
+        </ion-slide>
+        <ion-slide #deviceSlide>
+        </ion-slide>
+        <ion-slide #readySlide>
+        </ion-slide>
+    </ion-slides>
 </ion-content>
