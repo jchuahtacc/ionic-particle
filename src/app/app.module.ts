@@ -12,13 +12,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ParticleProvider } from '../providers/particle/particle';
 
 import { AppPreferences } from '@ionic-native/app-preferences';
+import { DeviceListComponent } from '../components/device-list/device-list';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
-    LoginPage
+    LoginPage,
+    DeviceListComponent
   ],
   imports: [
     BrowserModule,

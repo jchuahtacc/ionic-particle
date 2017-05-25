@@ -44,8 +44,20 @@
             </div>
         </ion-slide>
         <ion-slide #deviceSlide *ngIf="currentSlide=='deviceSlide'">
+            <div *ngIf="loading">Fetching your devices <ion-spinner></ion-spinner></div>
+            <div *ngIf="!loading">Please select a device</div>
+            <device-list (onDeviceSelect)="onDeviceSelect($event)"></device-list>
+            <div *ngIf="error"><ion-icon name="close-circle" item-left></ion-icon>We were unable to retrieve your devices</div>
+            <button ion-button *ngIf="error">Try again</button>
         </ion-slide>
         <ion-slide #readySlide *ngIf="currentSlide=='readySlide'">
+            <div *ngIf="readyState=='loading'">Fetching your device <ion-spinner></ion-spinner></div>
+            <div *ngIf="readyState=='offline'">{{selectedDeviceName}} is offline.</div>
+            <div *ngIf="readyState=='notfound'">The device you selected or previously used is no longer connected to your account.</div>
+            <button ion-button *ngIf="readyState=='offline' || readyState=='notfound'">Select another device</button>
+            <button ion-buton *ngIf="readyState=='offline'">Continue anyway</button>
+            <div *ngIf="readyState=='ready'">Your device is ready to go!</div>
+            <button ion-button *ngIf="readyState=='ready'">Continue</button>
         </ion-slide>
     </ion-slides>
 </ion-content>

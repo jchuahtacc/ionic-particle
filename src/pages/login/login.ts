@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { ParticleProvider } from '../../providers/particle/particle';
 import { AppPreferences } from '@ionic-native/app-preferences';
+import { DeviceListComponent } from '../../components/device-list/device-list';
 
 /**
  * Generated class for the LoginPage page.
@@ -19,7 +20,10 @@ export class LoginPage {
   password: string;
   loginFailed: boolean = false;
   loading: boolean = true;
+  readyState: string = "loading";
   currentSlide: string = "welcomeSlide";
+  selectedDeviceId: string = null;
+  selectedDeviceName: string = null;
   @ViewChild('setupSlides') setupSlides: Slides;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider, private prefs: AppPreferences) {
@@ -62,13 +66,56 @@ export class LoginPage {
 
   doDeviceSlide() {
     this.currentSlide = 'deviceSlide';
+    let fetchDevices = () => {
+        this.loading = true;
+        this.particle.listDevices().then(
+            (devices) => {
+                this.loading = false;
+            },
+            (error) => {
+                this.loading = false;
+            }
+        ); 
+    };
+    fetchDevices();
+  }
+
+
+  doReadySlide(deviceId? : string) {
+    this.currentSlide = 'readySlide';
+    this.readyState = "loading";
+    let setDevice = (deviceId) => {
+        this.particle.setDevice(deviceId).then(
+            (device) => {
+                if (device["connected"]) {
+                    this.readyState = 'ready';
+                } else {
+                    this.readyState = 'offline';
+                }
+            },
+            (error) => {
+                this.readyState = 'notfound';
+            }
+        );
+    }
+
+    if (deviceId) {
+        setDevice(deviceId);
+    } else {
+        this.prefs.fetch("deviceId").then(
+            setDevice,
+            (error) => {
+                this.doDeviceSlide();
+            }
+        );
+    }
   }
 
   doLogin() {
     this.particle.login( this.email, this.password ).then(
         (data) => {
             this.loginFailed = false;
-            this.doDeviceSlide();
+            this.doReadySlide();
         },
         (error) => {
             this.loginFailed = true;
@@ -82,5 +129,8 @@ export class LoginPage {
     }
   }
 
+  onDeviceSelect(device) {
+    this.doReadySlide(device["id"]);
+  }
 
 }
