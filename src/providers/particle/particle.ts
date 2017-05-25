@@ -14,6 +14,8 @@ export class ParticleProvider {
   public token: string = null;
   public devices: any = [ ];
   public deviceId: string = null;
+  public device: any = null;
+  private _events: any;
 
   constructor() {
     var Particle = require('particle-api-js');
@@ -39,7 +41,18 @@ export class ParticleProvider {
     if (!deviceId) {
         return null;
     }
-    return this.getDevice(deviceId);
+    return new Promise((resolve, reject) => {
+        this.getDevice(deviceId).then(
+            (data) => {
+                this.device = data["body"];
+                resolve(data["body"]);
+            },
+            (error) => {
+                this.device = null;
+                reject(error);
+            }
+        );
+    });
   }
 
   getDevice(deviceId: string = this.deviceId) {
@@ -137,6 +150,31 @@ export class ParticleProvider {
                     reject(data);
                 } else {
                     this.devices = data.body;
+                    this.api.getEventStream({ deviceId: 'mine', auth: this.token }).then(
+                        (stream) => {
+                            if (this._events){
+                                this._events.end();
+                                this._events = null;
+                            }
+                            this._events = stream;
+                            this._events.on('event', (result) => {
+                                console.log(result);
+                                if(result.name === "spark/status") {
+                                    for (var i in this.devices) {
+                                        if(this.devices[i] === result.coreid){
+                                            this.devices[i].connected = result.data == "online";
+                                        }
+
+                                    }
+                                }
+
+
+                            });
+                        },
+                        (error) => {
+                            console.log("error", error)
+                        }
+                    );
                     resolve(this.devices);
                 }
             },
