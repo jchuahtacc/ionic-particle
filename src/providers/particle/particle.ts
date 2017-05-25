@@ -149,7 +149,17 @@ export class ParticleProvider {
   }
 
   getVariable(variable: string, deviceId : string = this.deviceId) {
-    return this.api.getVariable({ name: variable, auth: this.token, deviceId: deviceId });
+    return new Promise((resolve, reject) => {
+        this.api.getVariable({ name: variable, auth: this.token, deviceId: deviceId }).then(
+            (data) => {
+                resolve(data.body.result);
+            },
+            (error) => {
+                reject(error);
+            }
+        );
+    }
+    );
   }
 
   pollVariable(variable: string, interval: number = 2000, deviceId: string = this.deviceId) {
