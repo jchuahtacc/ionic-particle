@@ -11,9 +11,9 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class ParticleProvider {
   public api: any;
-  public token: string = "";
+  public token: string = null;
   public devices: any = [ ];
-  public deviceId: string = "";
+  public deviceId: string = null;
 
   constructor() {
     var Particle = require('particle-api-js');
