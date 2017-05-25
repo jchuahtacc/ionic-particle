@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Rx';
 export class ParticleProvider {
   public api: any;
   public token: string = "";
-  public devices: any = { };
+  public devices: any = [ ];
   public deviceId: string = "";
 
   constructor() {
@@ -111,9 +111,8 @@ export class ParticleProvider {
                 if (data["statusCode"] != 200) {
                     reject(data);
                 } else {
-                    for (var key in data.body) {
-                        this.getDevice(data.body[key].id);
-                    }
+
+                    this.devices = data.body;
                     resolve(this.devices);
                 }
             },
