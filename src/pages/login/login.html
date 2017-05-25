@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Login</ion-title>
+    <ion-title>Welcome!</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -57,7 +57,7 @@
             <button ion-button *ngIf="readyState=='offline' || readyState=='notfound'">Select another device</button>
             <button ion-buton *ngIf="readyState=='offline'">Continue anyway</button>
             <div *ngIf="readyState=='ready'">Your device is ready to go!</div>
-            <button ion-button *ngIf="readyState=='ready'">Continue</button>
+            <button ion-button *ngIf="readyState=='ready'" (click)='navCtrl.pop()'>Continue</button>
         </ion-slide>
     </ion-slides>
 </ion-content>

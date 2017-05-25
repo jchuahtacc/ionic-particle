@@ -7,12 +7,19 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>Ionic Menu Starter</h3>
-
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
-
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+<ion-content padding> 
+  <div *ngIf="!particle.token">
+      Please login and select a device. <br />
+      <button ion-button (click)="login()">Login</button>
+  </div>
+  <div *ngIf="particle.token && particle.device">
+      <h3>Particle.io Device App Boilerplate</h3>
+      <div>
+          You are currently viewing {{particle.device.name}}.
+      </div>
+      <div>
+          The value of the device variable "var1" is {{var1}}
+      </div>
+      <button ion-button (click)="callFunction()">Call a function</button>
+  </div>
 </ion-content>
