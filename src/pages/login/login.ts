@@ -27,7 +27,6 @@ export class LoginPage {
   @ViewChild('setupSlides') setupSlides: Slides;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider, private prefs: AppPreferences) {
-    console.log("LoginPage constructor");
   }
 
   ngAfterViewInit() {
