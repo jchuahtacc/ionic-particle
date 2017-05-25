@@ -20,8 +20,18 @@ export class ParticleProvider {
     this.api = new Particle();
   }
 
-  setToken(token: string) {
-    this.token = token;
+  setToken(token: string) {``
+    return new Promise((resolve, reject) => {
+        this.api.getUserInfo({ auth: token }).then(
+            (data) => {
+                this.token = token;
+                resolve(data);
+            },
+            (error) => {
+                reject(error);
+            }
+        );
+    });
   }
 
   setDevice(deviceId: string) {
@@ -36,11 +46,25 @@ export class ParticleProvider {
     var promise = new Promise((resolve, reject) => {
         this.api.getDevice({ deviceId: deviceId, auth: this.token }).then(
             (result) => {
-                this.devices[deviceId] = result.body;
+                for (var i in this.devices) {
+                    if(this.devices[i].id == deviceId){
+                        this.devices[i] = result.body;
+                        resolve(result.body);
+                        return;
+                    }
+
+                }
+                this.devices.push(result.body);
                 resolve(result);
             },
             (error) => {
-                this.devices[deviceId] = null;
+                for (var i in this.devices) {
+                    if(this.devices[i].id == deviceId){
+                        this.devices.splice(i, 1);
+                        reject(error);
+                        return;
+                    }
+                }
                 reject(error);
             }
         );
@@ -100,8 +124,9 @@ export class ParticleProvider {
   }
 
   logout() {
-    this.setToken(null);
-    this.setDevice(null);
+    this.token = null;
+    this.devices = [ ];
+    this.deviceId = null;
   }
 
   listDevices() {
