@@ -12,7 +12,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ParticleProvider } from '../providers/particle/particle';
 
 import { AppPreferences } from '@ionic-native/app-preferences';
-import { PromiseSequencerProvider } from '../providers/promise-sequencer/promise-sequencer';
 
 @NgModule({
   declarations: [

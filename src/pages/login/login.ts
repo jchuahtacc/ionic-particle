@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { ParticleProvider } from '../../providers/particle/particle';
 import { AppPreferences } from '@ionic-native/app-preferences';
-import { Observable } from 'rxjs/Rx';
 
 /**
  * Generated class for the LoginPage page.
@@ -19,6 +18,7 @@ export class LoginPage {
   email: string;
   password: string;
   loginFailed: boolean = false;
+  loading: boolean = true;
   @ViewChild('setupSlides') setupSlides: Slides;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider, private prefs: AppPreferences) {
@@ -43,14 +43,17 @@ export class LoginPage {
 
   doWelcomeSlide() {
     console.log("doWelcomeSlide");
-    let errorCallback = (error) => { this.particle.setToken(null); };
+    let errorCallback = (error) => { this.particle.logout(); this.loading = false; };
     this.prefs.fetch("token").then(
         (token) => {
-            this.particle.api.getUserInfo({ auth: token }).then(
-                (data) => { 
-                    this.particle.setToken(token);
+            this.particle.setToken(token).then(
+                (userInfo) => {
+                    this.loading = false;
                 },
-                errorCallback 
+                (error) => {
+                    this.particle.logout();
+                    this.loading = false;
+                }
             );
         },
         errorCallback

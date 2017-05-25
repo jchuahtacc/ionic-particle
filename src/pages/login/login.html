@@ -14,7 +14,7 @@
 
 <ion-content padding>
     <ion-slides #setupSlides (ionSlideDidChange)="slideChanged()">
-        <ion-slide #welcomeSlide>
+        <ion-slide #welcomeSlide *ngIf="loading">
             <div>Welcome!</div>
             <div>Loading your preferences</div>
             <ion-spinner></ion-spinner>
