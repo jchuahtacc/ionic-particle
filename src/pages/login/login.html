@@ -13,13 +13,18 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-slides #setupSlides (ionSlideDidChange)="slideChanged()">
-        <ion-slide #welcomeSlide *ngIf="loading">
+    <ion-slides #setupSlides>
+        <ion-slide #welcomeSlide *ngIf="currentSlide=='welcomeSlide'">
             <div>Welcome!</div>
-            <div>Loading your preferences</div>
-            <ion-spinner></ion-spinner>
+            <div *ngIf="loading">
+                <div>Loading your preferences</div>
+                <ion-spinner></ion-spinner>
+            </div>
+            <div *ngIf="!loading">
+                <button ion-button (click)="continueButton()">Continue</button>
+            </div>
         </ion-slide>
-        <ion-slide #loginSlide *ngIf="!particle.token">
+        <ion-slide #loginSlide *ngIf="currentSlide=='loginSlide'">
             <div>
                 Please log in to your Particle.io account.
             </div>
@@ -38,9 +43,9 @@
                 Your login information was incorrect. {{loginFailed}}
             </div>
         </ion-slide>
-        <ion-slide #deviceSlide>
+        <ion-slide #deviceSlide *ngIf="currentSlide=='deviceSlide'">
         </ion-slide>
-        <ion-slide #readySlide>
+        <ion-slide #readySlide *ngIf="currentSlide=='readySlide'">
         </ion-slide>
     </ion-slides>
 </ion-content>

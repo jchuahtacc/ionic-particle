@@ -19,6 +19,7 @@ export class LoginPage {
   password: string;
   loginFailed: boolean = false;
   loading: boolean = true;
+  currentSlide: string = "welcomeSlide";
   @ViewChild('setupSlides') setupSlides: Slides;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider, private prefs: AppPreferences) {
@@ -26,31 +27,30 @@ export class LoginPage {
   }
 
   ngAfterViewInit() {
-    this.setupSlides.lockSwipeToNext(true);
-  }
-
-  slideChanged() {
-      switch (this.setupSlides.getActiveIndex()) {
-        case 0 : this.doWelcomeSlide(); break;
-        case 2 : this.doDeviceSlide(); break;
-        default : break;
-      }
+    this.setupSlides.lockSwipes(true);
+    this.setupSlides.pager = true;
   }
 
   ionViewDidLoad() {
     this.doWelcomeSlide();
   }
 
+  doLoginSlide() {
+    this.currentSlide = 'loginSlide';
+  }
+
   doWelcomeSlide() {
-    console.log("doWelcomeSlide");
+    this.currentSlide = 'welcomeSlide';
     let errorCallback = (error) => { this.particle.logout(); this.loading = false; };
     this.prefs.fetch("token").then(
         (token) => {
             this.particle.setToken(token).then(
                 (userInfo) => {
+                    console.log("User token", this.particle.token);
                     this.loading = false;
                 },
                 (error) => {
+                    console.log("User token invalid", token);
                     this.particle.logout();
                     this.loading = false;
                 }
@@ -61,34 +61,26 @@ export class LoginPage {
   }
 
   doDeviceSlide() {
-  }
-
-  test() {
-    this.particle.getEventSubscription("event1", "mine").subscribe(
-        (event) => {
-            console.log("Event stream event", event);
-        },
-        (error) => {
-            console.log("event stream error", error);
-        },
-        () => {
-            console.log("event stream complete");
-        }
-    );
-
+    this.currentSlide = 'deviceSlide';
   }
 
   doLogin() {
     this.particle.login( this.email, this.password ).then(
         (data) => {
             this.loginFailed = false;
-            console.log("Login successful", data);
-            this.test();
+            this.doDeviceSlide();
         },
         (error) => {
             this.loginFailed = true;
-            console.log(error);
         }
     );
   }
+
+  continueButton() {
+    if (!this.particle.token) {
+       this.doLoginSlide(); 
+    }
+  }
+
+
 }
