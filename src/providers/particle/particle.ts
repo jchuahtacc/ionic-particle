@@ -11,9 +11,9 @@ import { Observable } from 'rxjs/Rx';
 @Injectable()
 export class ParticleProvider {
   public api: any;
-  public token: string = "";
-  public devices: any = { };
-  public deviceId: string = "";
+  public token: string = null;
+  public devices: any = [ ];
+  public deviceId: string = null;
 
   constructor() {
     var Particle = require('particle-api-js');
@@ -58,7 +58,7 @@ export class ParticleProvider {
   getEventSubscription(name: string = "mine", deviceId: string = this.deviceId) {
     var observable = Observable.create(
         (observer) => {
-            this.getEventStream(name, deviceId).then( 
+            this.getEventStream(name, deviceId).then(
                 (stream) => {
                     console.log("event stream", stream);
                     stream.on('event', (result) => {
@@ -86,7 +86,7 @@ export class ParticleProvider {
         (resolve, reject) => {
             this.api.login( { username: email, password: password } ).then(
                 (data) => {
-                    this.token = data.body.access_token;                    
+                    this.token = data.body.access_token;
                     resolve(data);
                 },
                 (error) => {
@@ -108,12 +108,10 @@ export class ParticleProvider {
     var promise = new Promise( (resolve, reject) => {
         this.api.listDevices({ auth: this.token }).then(
             (data) => {
-                if (body["statusCode"] != 200) {
-                    reject(body);
+                if (data["statusCode"] != 200) {
+                    reject(data);
                 } else {
-                    for (var key in data) {
-                        this.getDevice(data.body[key].id);
-                    }
+                    this.devices = data.body;
                     resolve(this.devices);
                 }
             },
