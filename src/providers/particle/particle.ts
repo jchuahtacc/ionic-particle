@@ -43,7 +43,7 @@ export class ParticleProvider {
     }
     return new Promise((resolve, reject) => {
         this.getDevice(deviceId).then(
-            (device) => { 
+            (device) => {
                 this.device = device;
                 resolve(device);
             },
@@ -68,7 +68,7 @@ export class ParticleProvider {
 
                 }
                 this.devices.push(result.body);
-                resolve(result);
+                resolve(result.body);
             },
             (error) => {
                 for (var i in this.devices) {
@@ -88,11 +88,11 @@ export class ParticleProvider {
   getConnectionStatus(deviceId: string = this.deviceId) {
   }
 
-  getEventStream(name: string = "mine", deviceId: string = this.deviceId) {
+  getEventStream(name: string, deviceId: string = this.deviceId) {
     return this.api.getEventStream({ name: name, deviceId: deviceId, auth: this.token });
   }
 
-  getEventSubscription(name: string = "mine", deviceId: string = this.deviceId) {
+  subscribe(name: string, deviceId: string = this.deviceId) {
     var observable = Observable.create(
         (observer) => {
             this.getEventStream(name, deviceId).then(
@@ -158,16 +158,16 @@ export class ParticleProvider {
                             }
                             this._events = stream;
                             this._events.on('event', (result) => {
-                                if(result.name === "spark/status") {
+                                if (result.name === "spark/status") {
                                     for (var i in this.devices) {
                                         if(this.devices[i] === result.coreid){
                                             this.devices[i].connected = result.data == "online";
                                         }
-
+                                    }
+                                    if (this.device.id === result.coreid){
+                                        this.device.id.connected = result.data == "online";
                                     }
                                 }
-
-
                             });
                         },
                         (error) => {
