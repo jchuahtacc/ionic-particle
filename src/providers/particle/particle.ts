@@ -43,9 +43,9 @@ export class ParticleProvider {
     }
     return new Promise((resolve, reject) => {
         this.getDevice(deviceId).then(
-            (data) => {
-                this.device = data["body"];
-                resolve(data["body"]);
+            (device) => { 
+                this.device = device;
+                resolve(device);
             },
             (error) => {
                 this.device = null;
@@ -158,7 +158,6 @@ export class ParticleProvider {
                             }
                             this._events = stream;
                             this._events.on('event', (result) => {
-                                console.log(result);
                                 if(result.name === "spark/status") {
                                     for (var i in this.devices) {
                                         if(this.devices[i] === result.coreid){
@@ -173,15 +172,13 @@ export class ParticleProvider {
                         },
                         (error) => {
                             console.log("error", error)
-                        }
-                    );
+                        });
                     resolve(this.devices);
                 }
             },
             (error) => {
                 reject(error);
-            }
-        );
+            });
     });
     return promise;
   }
