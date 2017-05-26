@@ -13,6 +13,7 @@ import { ParticleProvider } from '../providers/particle/particle';
 
 import { AppPreferences } from '@ionic-native/app-preferences';
 import { DeviceListComponent } from '../components/device-list/device-list';
+import { ParticleProgressComponent } from '../components/particle-progress/particle-progress';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { DeviceListComponent } from '../components/device-list/device-list';
     HomePage,
     ListPage,
     LoginPage,
-    DeviceListComponent
+    DeviceListComponent,
+    ParticleProgressComponent
   ],
   imports: [
     BrowserModule,
