@@ -9,6 +9,7 @@ import { ParticleProvider } from '../../providers/particle/particle';
 })
 export class HomePage {
   public var1: any;
+  private subscription: any = null;
   
   constructor(public navCtrl: NavController, public particle: ParticleProvider) {
   }
@@ -17,8 +18,16 @@ export class HomePage {
     this.login()
   }
 
+  cancelSubscription() {
+    if (this.subscription) {
+        this.subscription.cancel();
+    }
+    this.subscription = null;
+  }
+
   ionViewDidEnter() {
     if (this.particle.device) {
+        this.cancelSubscription();
         this.particle.pollVariable("var1").subscribe(
             (value) => { this.var1 = value; },
             (error) => { console.log("Error reading var1"); },
@@ -29,9 +38,5 @@ export class HomePage {
 
   login() {
     this.navCtrl.push( LoginPage );
-  }
-
-  callFunction() {
-    this.particle.callFunction("fun1");
   }
 }
