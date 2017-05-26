@@ -97,7 +97,6 @@ export class ParticleProvider {
         (observer) => {
             this.getEventStream(name, deviceId).then(
                 (stream) => {
-                    console.log("event stream", stream);
                     stream.on('event', (result) => {
                         observer.next(result);
                     });
