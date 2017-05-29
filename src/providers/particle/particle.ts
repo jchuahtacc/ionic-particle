@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
+import { Storage } from '@ionic/storage';
 
 /*
   Generated class for the ParticleProvider provider.
@@ -17,16 +18,34 @@ export class ParticleProvider {
   public device: any = null;
   private _events: any;
 
-  constructor() {
+  constructor(private storage: Storage) {
     var Particle = require('particle-api-js');
     this.api = new Particle();
   }
 
-  setToken(token: string) {``
+  setToken(token: string) {
+    this.token = token;
+    if (!token || !token.length) {
+        return new Promise((resolve, reject) => {
+            this.storage.ready().then(
+                (ready) => {
+                    this.storage.remove("token").then(
+                        (ready) => { resolve(ready); },
+                        (error) => { reject(error); }
+                    );
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
+        });
+    } else {
+        this.storage.set("Token set", token);
+        this.listDevices();
+    }
     return new Promise((resolve, reject) => {
         this.api.getUserInfo({ auth: token }).then(
             (data) => {
-                this.token = token;
                 resolve(data);
             },
             (error) => {
@@ -38,8 +57,22 @@ export class ParticleProvider {
 
   setDevice(deviceId: string) {
     this.deviceId = deviceId;
-    if (!deviceId) {
-        return null;
+    if (!deviceId || !deviceId.length) {
+        return new Promise((resolve, reject) => {
+            this.storage.ready().then(
+                (ready) => {
+                    this.storage.remove("deviceId").then(
+                        (ready) => { resolve(ready); },
+                        (error) => { reject(error); }
+                    );
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
+        });
+    } else {
+        this.storage.set("deviceId", deviceId);
     }
     return new Promise((resolve, reject) => {
         this.getDevice(deviceId).then(
@@ -122,11 +155,18 @@ export class ParticleProvider {
         (resolve, reject) => {
             this.api.login( { username: email, password: password } ).then(
                 (data) => {
-                    this.token = data.body.access_token;
+                    this.setToken(data.body.access_token).then(
+                        (userInfo) => {
+                            resolve(userInfo);
+                        },
+                        (error) => {
+                            reject(error);
+                        }
+                    );
                     resolve(data);
                 },
                 (error) => {
-                    this.token = "";
+                    this.setToken(null);
                     reject(error);
                 }
             );
@@ -139,6 +179,12 @@ export class ParticleProvider {
     this.token = null;
     this.devices = [ ];
     this.deviceId = null;
+    this.storage.ready().then(
+        (ready) => {
+            this.storage.remove("token");
+            this.storage.remove("deviceId");
+        }
+    );
   }
 
   listDevices() {

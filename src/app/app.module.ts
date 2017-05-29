@@ -11,9 +11,10 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ParticleProvider } from '../providers/particle/particle';
 
-import { AppPreferences } from '@ionic-native/app-preferences';
 import { DeviceListComponent } from '../components/device-list/device-list';
 import { ParticleProgressComponent } from '../components/particle-progress/particle-progress';
+
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { ParticleProgressComponent } from '../components/particle-progress/parti
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -40,8 +42,7 @@ import { ParticleProgressComponent } from '../components/particle-progress/parti
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ParticleProvider,
-    MenuController, 
-    AppPreferences,
+    MenuController
   ]
 })
 export class AppModule {}

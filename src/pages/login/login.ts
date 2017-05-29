@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
 import { ParticleProvider } from '../../providers/particle/particle';
-import { AppPreferences } from '@ionic-native/app-preferences';
 import { DeviceListComponent } from '../../components/device-list/device-list';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the LoginPage page.
@@ -26,7 +26,7 @@ export class LoginPage {
   selectedDeviceName: string = null;
   @ViewChild('setupSlides') setupSlides: Slides;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider, private prefs: AppPreferences) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider, private storage: Storage) {
   }
 
   ngAfterViewInit() {
@@ -45,38 +45,73 @@ export class LoginPage {
   doWelcomeSlide() {
     this.currentSlide = 'welcomeSlide';
     let errorCallback = (error) => { this.particle.logout(); this.loading = false; };
-    this.prefs.fetch("token").then(
-        (token) => {
-            this.particle.setToken(token).then(
-                (userInfo) => {
-                    console.log("User token", this.particle.token);
-                    this.loading = false;
-                },
-                (error) => {
-                    console.log("User token invalid", token);
-                    this.particle.logout();
-                    this.loading = false;
-                }
-            );
-        },
+    this.storage.ready().then(
+        (ready) => {
+            this.storage.get("token").then(
+                    (token) => {
+                        this.particle.setToken(token).then(
+                            (userInfo) => {
+                                console.log("User token", this.particle.token);
+                                this.loading = false;
+                            },
+                            (error) => {
+                                console.log("User token invalid", token);
+                                this.particle.logout();
+                                this.loading = false;
+                            }
+                        );
+                    },
+                    errorCallback
+                );
+        }, 
         errorCallback
     );
+    
   }
-
+  
   doDeviceSlide() {
     this.currentSlide = 'deviceSlide';
+    this.loading = true;
+
     let fetchDevices = () => {
-        this.loading = true;
         this.particle.listDevices().then(
             (devices) => {
                 this.loading = false;
             },
             (error) => {
+                console.log("Error fetching devices", error);
                 this.loading = false;
             }
         ); 
     };
-    fetchDevices();
+
+    this.storage.ready().then(
+        (ready) => {
+            this.storage.get("deviceId").then(
+                (deviceId) => {
+                    if (deviceId && deviceId.length) {
+                        this.particle.setDevice(deviceId).then(
+                            (device) => {
+                                this.onDeviceSelect(device);
+                            },
+                            (error) => {
+                                fetchDevices();
+                            }
+                        );
+                    } else {
+                        console.log("No deviceId, fetching devices");
+                        fetchDevices();
+                    }
+                },
+                (error) => {
+                    fetchDevices();
+                }
+            );
+        },
+        (error) => {
+            fetchDevices();
+        }
+    );
   }
 
 
@@ -101,18 +136,14 @@ export class LoginPage {
     if (deviceId) {
         setDevice(deviceId);
     } else {
-        this.prefs.fetch("deviceId").then(
-            setDevice,
-            (error) => {
-                this.doDeviceSlide();
-            }
-        );
+        this.doDeviceSlide();
     }
   }
 
   doLogin() {
     this.particle.login( this.email, this.password ).then(
         (data) => {
+            console.log("Login succeeded", data);
             this.loginFailed = false;
             this.doReadySlide();
         },
@@ -125,10 +156,37 @@ export class LoginPage {
   continueButton() {
     if (!this.particle.token) {
        this.doLoginSlide(); 
+    } else {
+        this.doDeviceSlide();
     }
   }
 
+  continueAnyway() {
+    this.particle.setDevice(this.selectedDeviceId);
+    this.navCtrl.pop();
+  }
+
+  reselect() {
+    this.storage.ready().then(
+        (ready) => {
+            this.storage.remove("deviceId").then(
+                (ready) => {
+                    this.doDeviceSlide();
+                },
+                (error) => {
+                    this.doDeviceSlide();
+                }
+            );
+        },
+        (error) => {
+            this.doDeviceSlide();
+        }
+    );
+  }
+
   onDeviceSelect(device) {
+    this.selectedDeviceName = device["name"];
+    this.selectedDeviceId = device["id"];
     this.doReadySlide(device["id"]);
   }
 
