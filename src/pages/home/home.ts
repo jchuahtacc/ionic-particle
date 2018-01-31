@@ -28,7 +28,7 @@ export class HomePage {
   ionViewDidEnter() {
     if (this.particle.device) {
         this.cancelSubscription();
-        this.particle.pollVariable("var1").subscribe(
+        this.subscription = this.particle.pollVariable("var1").subscribe(
             (value) => { this.var1 = value; },
             (error) => { console.log("Error reading var1"); },
             () => { console.log("Stopped polling var1"); }
