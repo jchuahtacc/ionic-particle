@@ -40,7 +40,7 @@ export class ParticleProvider {
             );
         });
     } else {
-        this.storage.set("Token set", token);
+        this.storage.set("token", token);
         this.listDevices();
     }
     return new Promise((resolve, reject) => {

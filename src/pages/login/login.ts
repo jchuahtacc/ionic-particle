@@ -43,6 +43,10 @@ export class LoginPage {
   }
 
   doWelcomeSlide() {
+    if (this.particle.token) {
+        this.doDeviceSlide();
+        return;
+    }
     this.currentSlide = 'welcomeSlide';
     let errorCallback = (error) => { this.particle.logout(); this.loading = false; };
     this.storage.ready().then(
@@ -53,6 +57,7 @@ export class LoginPage {
                             (userInfo) => {
                                 console.log("User token", this.particle.token);
                                 this.loading = false;
+                                this.continueButton();
                             },
                             (error) => {
                                 console.log("User token invalid", token);
@@ -66,7 +71,6 @@ export class LoginPage {
         }, 
         errorCallback
     );
-    
   }
   
   doDeviceSlide() {
@@ -155,6 +159,7 @@ export class LoginPage {
 
   continueButton() {
     if (!this.particle.token) {
+       console.log("No particle token");
        this.doLoginSlide(); 
     } else {
         this.doDeviceSlide();

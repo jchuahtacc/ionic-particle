@@ -4,7 +4,6 @@ import { IonicApp, IonicErrorHandler, IonicModule, MenuController } from 'ionic-
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -20,7 +19,6 @@ import { IonicStorageModule } from '@ionic/storage';
   declarations: [
     MyApp,
     HomePage,
-    ListPage,
     LoginPage,
     DeviceListComponent,
     ParticleProgressComponent
@@ -34,7 +32,6 @@ import { IonicStorageModule } from '@ionic/storage';
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage,
     LoginPage
   ],
   providers: [

@@ -15,11 +15,13 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.login()
+    if (!this.particle.token) {
+    	this.login()
+    }
   }
 
   cancelSubscription() {
-    if (this.subscription) {
+    if (this.subscription && this.subscription.cancel) {
         this.subscription.cancel();
     }
     this.subscription = null;
@@ -33,7 +35,7 @@ export class HomePage {
             (error) => { console.log("Error reading var1"); },
             () => { console.log("Stopped polling var1"); }
         );
-    }
+    } 
   }
 
   login() {

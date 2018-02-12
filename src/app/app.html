@@ -12,8 +12,8 @@
       </button>
     </ion-list>
     <device-list (onDeviceSelected)="selectDevice($event)"></device-list>
-    <button ion-item *ngIf="!particle.token" (click)="loginPage()">Login</button>
-    <button ion-item *ngIf="particle.token" (click)="particle.logout()">Logout</button>
+    <button menuClose ion-item *ngIf="!particle.token" (click)="loginPage()">Login</button>
+    <button menuClose ion-item *ngIf="particle.token" (click)="particle.logout(); loginPage();">Logout</button>
   </ion-content>
 
 </ion-menu>
