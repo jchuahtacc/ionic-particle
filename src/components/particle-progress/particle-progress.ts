@@ -1,12 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ParticleProvider } from '../../providers/particle/particle';
 
-/**
- * Generated class for the ParticleProgressComponent component.
- *
- * See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
- * for more info on Angular Components.
- */
 @Component({
   selector: 'particle-progress',
   templateUrl: 'particle-progress.html'
@@ -31,9 +25,12 @@ export class ParticleProgressComponent {
 
   ngOnChanges() {
     this.cancelSubscription();
+    // Subscribe to an event
     this.subscription = this.particle.subscribe(this.eventName).subscribe(
         (event) => {
+            // Calculate progress bar percentage based on event.data (assuming that it's a double)
             this.progress = (parseFloat(event.data) - this.min) /  (this.max - this.min) * 100;
+            // Update any listeners that the progress bar changed
             this.onChangeEvent.emit(this.progress);
         },
         (error) => {

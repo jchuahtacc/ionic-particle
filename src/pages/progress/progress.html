@@ -1,0 +1,27 @@
+<!--
+  Generated template for the ProgressPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Progress</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="!particle.token">
+      Please login and select a device. <br />
+      <button ion-button (click)="login()">Login</button>
+  </div>
+  <div *ngIf="particle.token && particle.device">
+    <h5>Progress</h5>
+    <!-- The particle-progress component subscribes to an event and updates its value from the event data -->
+    <particle-progress [event]="eventName" [min]="2" [max]="10"></particle-progress>
+  </div>
+
+</ion-content>

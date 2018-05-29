@@ -1,0 +1,45 @@
+<!--
+  Generated template for the VariablePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Variables</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <!--
+    First, let's make sure we are actually logged in. If not, show a Login button
+  -->
+  <div *ngIf="!particle.token">
+      Please login and select a device. <br />
+      <button ion-button (click)="login()">Login</button>
+  </div>
+
+  <!--
+    Next, let's display content if we are both logged in and a device is selected.
+  -->
+  <div *ngIf="particle.token && particle.device">
+      <!-- Make sure we actually were able to poll the variable -->
+      <div *ngIf="subscribed">
+        <h3>Device variables</h3>
+        <!--
+            Finally, we can display the variable var1, which is defined in variable.ts
+        -->
+        <p>
+        The device variable "var1" is periodically polled, and the current value is {{var1}} 
+        </p>
+      </div>
+      <!-- "If we were unable to poll the variable, display an error message -->
+      <div *ngIf="!subscribed">
+            The device is offline or "var1" is unavailable.
+      </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,44 @@
+<!--
+  Generated template for the FunctionPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Functions</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <!--
+    First, let's make sure we are actually logged in. If not, show a Login button
+  -->
+  <div *ngIf="!particle.token">
+      Please login and select a device. <br />
+      <button ion-button (click)="login()">Login</button>
+  </div>
+
+  <!--
+    Next, let's display content if we are both logged in and a device is selected.
+  -->
+  <div *ngIf="particle.token && particle.device">
+      <div *ngIf="functionExists; then display_controls else display_error"></div>
+      <ng-template #display_controls>
+        <p>
+            You can call device functions from buttons
+        </p>
+        <!-- The click directive uses particle.callFunction to call a cloud function -->
+        <button ion-button (click)="callFunction()">fun1</button>
+      </ng-template>
+      <ng-template #display_error>
+          <p>
+            The device doesn't appear to have a function called 'fun1'
+          </p>
+      </ng-template>
+  </div>
+
+</ion-content>

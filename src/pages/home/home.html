@@ -13,38 +13,12 @@
       <button ion-button (click)="login()">Login</button>
   </div>
   <div *ngIf="particle.token && particle.device">
-      <h3>Particle.io Device App Boilerplate</h3>
-      <div>
-          <h5>Particle device status</h5>
-          <p>
-            You can display different device states by checking <code>particle.device</code>
-          </p>
-          <p *ngIf="!particle.device || !particle.device.connected">The device is offline</p>
-          <p *ngIf="particle.device && particle.device.connected">You are currently viewing {{particle.device.name}}</p>
-      </div>
-      <div>
-          <h5>Device variables</h5>
-          <p>
-            You can subscribe to variables by calling <code>particle.pollVariable</code>.
-          </p>
-          <p>
-            The device variable "var1" automatically polls, and the current value is {{var1}}
-          </p>
-      </div>
-      <div>
-          <h5>Custom components</h5>
-          <p>
-            You can also create custom components. It's also more efficient to update components by subscribing to events 
-            from your device, by calling <code>particle.subscribe</code>
-          </p>
-          <particle-progress [event]="'variableUpdate'" [min]="2" [max]="10"></particle-progress>
-      </div>
-      <div>
-        <h5>Calling functions</h5>
-        <p>
-            You can call device functions with <code>particle.callFunction</code>
-        </p>
-        <button ion-button (click)="particle.callFunction('fun1')">Call a function</button>
-      </div>
-  </div>
+      <h5>Particle.io Device App </h5>
+      <p>
+        This app demonstrates how to access a Particle.io device to display its state, read events, and call functions.
+      </p>
+      <!-- You can display different device states by checking particle.device -->
+      <p *ngIf="!particle.device || !particle.device.connected">{{particle.device.name}} is offline</p>
+      <p *ngIf="particle.device && particle.device.connected">You are currently viewing {{particle.device.name}}</p>
+ </div>
 </ion-content>

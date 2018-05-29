@@ -5,6 +5,9 @@ import { IonicApp, IonicErrorHandler, IonicModule, MenuController } from 'ionic-
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
+import { FunctionPage } from '../pages/function/function';
+import { VariablePage } from '../pages/variable/variable';
+import { ProgressPage } from '../pages/progress/progress';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -20,6 +23,9 @@ import { IonicStorageModule } from '@ionic/storage';
     MyApp,
     HomePage,
     LoginPage,
+    FunctionPage,
+    VariablePage,
+    ProgressPage,
     DeviceListComponent,
     ParticleProgressComponent
   ],
@@ -32,7 +38,10 @@ import { IonicStorageModule } from '@ionic/storage';
   entryComponents: [
     MyApp,
     HomePage,
-    LoginPage
+    LoginPage,
+    FunctionPage,
+    VariablePage,
+    ProgressPage
   ],
   providers: [
     StatusBar,
