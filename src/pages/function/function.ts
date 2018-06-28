@@ -11,7 +11,8 @@ import { ParticleProvider } from '../../providers/particle/particle';
 export class FunctionPage {
 
   public functionExists: boolean = false;
-  public functionName: string = 'fun1';
+  public functionName: string = 'led';
+  public functionParameter: string = 'on';
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public particle: ParticleProvider) {
   }
@@ -20,12 +21,12 @@ export class FunctionPage {
     if (!this.particle.token) {
     	this.login()
     } else {
-        this.functionExists = this.particle.device && this.particle.device.functions && this.particle.device.functions.find(this.functionName);
+    this.functionExists = this.particle.device && this.particle.device.functions && this.particle.device.functions.indexOf(this.functionName) >= 0;
     }
   }
 
   callFunction() {
-    this.particle.callFunction(this.functionName);
+    this.particle.callFunction(this.functionName, this.functionParameter);
   }
 
   login() {
