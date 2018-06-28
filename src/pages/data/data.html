@@ -16,5 +16,13 @@
 <ion-content padding>
     <h5>Click to refresh</h5>
     <button ion-button (click)="refresh()">Get Data</button>
+    <ion-card>
+      <ion-card-header>
+        Line Chart
+      </ion-card-header>
+      <ion-card-content>
+        <canvas #lineCanvas></canvas>
+      </ion-card-content>
+    </ion-card>
 
 </ion-content>
