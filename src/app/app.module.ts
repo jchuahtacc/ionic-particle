@@ -8,6 +8,7 @@ import { LoginPage } from '../pages/login/login';
 import { FunctionPage } from '../pages/function/function';
 import { VariablePage } from '../pages/variable/variable';
 import { ProgressPage } from '../pages/progress/progress';
+import { DataPage } from '../pages/data/data';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -17,6 +18,8 @@ import { DeviceListComponent } from '../components/device-list/device-list';
 import { ParticleProgressComponent } from '../components/particle-progress/particle-progress';
 
 import { IonicStorageModule } from '@ionic/storage';
+import { ThingspeakProvider } from '../providers/thingspeak/thingspeak';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -26,11 +29,13 @@ import { IonicStorageModule } from '@ionic/storage';
     FunctionPage,
     VariablePage,
     ProgressPage,
+    DataPage,
     DeviceListComponent,
     ParticleProgressComponent
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
   ],
@@ -41,14 +46,16 @@ import { IonicStorageModule } from '@ionic/storage';
     LoginPage,
     FunctionPage,
     VariablePage,
-    ProgressPage
+    ProgressPage,
+    DataPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ParticleProvider,
-    MenuController
+    MenuController,
+    ThingspeakProvider,
   ]
 })
 export class AppModule {}
